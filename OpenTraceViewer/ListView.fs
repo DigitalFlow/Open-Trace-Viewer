@@ -4,10 +4,15 @@ namespace OpenTraceViewer
 open System
 open Gtk
 
-type ListView() = 
-    member this.CreateList() =
-            let view = new TreeView()
+type ListView() as this = 
 
+    let view = new TreeView()
+    let store = new ListStore(typeof<DateTime>, typeof<string>, typeof<string>)
+
+    member this.View = view
+    member this.Store = store
+   
+    member this.Initialize() =
             let dateCol = new TreeViewColumn()
             let dateCell = new CellRendererText()
             dateCol.Title <- "Date"
@@ -28,13 +33,17 @@ type ListView() =
             messageCol.PackStart(messageCell, true)
             messageCol.AddAttribute(messageCell, "text", 2)
 
-            view.AppendColumn(dateCol) |> ignore
-            view.AppendColumn(levelCol) |> ignore
-            view.AppendColumn(messageCol) |> ignore
+            this.View.AppendColumn(dateCol) |> ignore
+            this.View.AppendColumn(levelCol) |> ignore
+            this.View.AppendColumn(messageCol) |> ignore
 
-            let store = new ListStore(typeof<DateTime>, typeof<string>, typeof<string>)
-            view.Model <- store
+            this.View.Model <- this.Store
 
-            store.AppendValues(new DateTime(2016, 2, 20), "Trace", "Trace Message") |> ignore
+            this.View
 
-            view
+    member this.AddValue(row : DataRow) =
+        this.Store.AppendValues(row.Date, row.TraceLevel.ToString(), row.Message)
+
+    member this.AddValues(rows : seq<DataRow>) =
+        rows
+        |> Seq.iter (fun row -> this.AddValue(row) |> ignore)

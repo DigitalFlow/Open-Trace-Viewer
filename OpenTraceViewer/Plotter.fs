@@ -4,22 +4,31 @@ open System
 open OxyPlot
 open OxyPlot.GtkSharp
 open OxyPlot.Series
+open NLog
 
 type Plotter() = 
-    member this.TraceSeries = new LineSeries()
-    member this.InfoSeries = new LineSeries()
-    member this.WarnSeries = new LineSeries()
-    member this.ErrorSeries = new LineSeries()
 
-    member this.CreatePlot() =
-            let view = new OxyPlot.GtkSharp.PlotView()
-            let model = new PlotModel(Title = "Logs", Subtitle = "Graph view of log entrys - by category")
+    let view = new OxyPlot.GtkSharp.PlotView()
+    let model = new PlotModel(Title = "Logs", Subtitle = "Graph view of log entrys - by category")
+    let trace = new LineSeries()
+    let info = new LineSeries()
+    let warn = new LineSeries()
+    let error = new LineSeries()
 
+    member this.View = view
+    member this.Model = model
+    member this.TraceSeries = trace
+    member this.InfoSeries = info
+    member this.WarnSeries = warn
+    member this.ErrorSeries = error
+    member this.Logger = LogManager.GetCurrentClassLogger()
+
+    member this.Initialize() =
             this.TraceSeries.Title <- "Trace"
             this.TraceSeries.CanTrackerInterpolatePoints <- false
             this.TraceSeries.Color <- OxyColors.ForestGreen
             this.TraceSeries.MarkerType <- MarkerType.Circle
-            this.TraceSeries.MarkerSize <- 1.0
+            this.TraceSeries.MarkerSize <- 5.0
             this.TraceSeries.MarkerStroke <-OxyColors.White
             this.TraceSeries.MarkerFill <- OxyColors.ForestGreen
             this.TraceSeries.MarkerStrokeThickness <- 1.0
@@ -28,7 +37,7 @@ type Plotter() =
             this.InfoSeries.CanTrackerInterpolatePoints <- false
             this.InfoSeries.Color <- OxyColors.SkyBlue
             this.InfoSeries.MarkerType <- MarkerType.Circle
-            this.InfoSeries.MarkerSize <- 1.0
+            this.InfoSeries.MarkerSize <- 5.0
             this.InfoSeries.MarkerStroke <-OxyColors.White
             this.InfoSeries.MarkerFill <- OxyColors.SkyBlue
             this.InfoSeries.MarkerStrokeThickness <- 1.0
@@ -51,17 +60,28 @@ type Plotter() =
             this.ErrorSeries.MarkerFill <- OxyColors.IndianRed
             this.ErrorSeries.MarkerStrokeThickness <- 1.0
 
-            model.Series.Add(this.TraceSeries)
-            model.Series.Add(this.InfoSeries)
-            model.Series.Add(this.WarnSeries)
-            model.Series.Add(this.ErrorSeries)
+            this.Model.Series.Add(this.TraceSeries)
+            this.Model.Series.Add(this.InfoSeries)
+            this.Model.Series.Add(this.WarnSeries)
+            this.Model.Series.Add(this.ErrorSeries)
 
-            view.Model <- model
-            view
+            this.View.Model <- model
+            this.View
 
-        member public this.AddDataToPlot(row:DataRow) =
-            match row.TraceLevel with
-            | Trace -> this.TraceSeries.Points.Add(new DataPoint(10.0, 10.0))
-            | Info -> this.InfoSeries.Points.Add(new DataPoint((float)this.InfoSeries.Points.Count + 1.0, 1.0))
-            | Warn -> this.WarnSeries.Points.Add(new DataPoint((float)this.WarnSeries.Points.Count + 1.0, 1.0))
-            | Error -> this.ErrorSeries.Points.Add(new DataPoint((float)this.ErrorSeries.Points.Count + 1.0, 1.0))
+        member public this.AddDataToPlot(rows:seq<DataRow>) =
+            rows
+            |> Seq.iter (fun row ->
+                            match row.TraceLevel with
+                            | Trace -> 
+                                this.Logger.Trace(sprintf "Adding row with tracelevel Trace to plot")
+                                this.TraceSeries.Points.Add(new DataPoint(10.0, 10.0))
+                            | Info -> 
+                                this.Logger.Trace(sprintf "Adding row with tracelevel Info to plot")
+                                this.InfoSeries.Points.Add(new DataPoint((float)this.InfoSeries.Points.Count + 1.0, 1.0))
+                            | Warn -> 
+                                this.Logger.Trace(sprintf "Adding row with tracelevel Warn to plot")
+                                this.WarnSeries.Points.Add(new DataPoint((float)this.WarnSeries.Points.Count + 1.0, 1.0))
+                            | Error -> 
+                                this.Logger.Trace(sprintf "Adding row with tracelevel Error to plot")
+                                this.ErrorSeries.Points.Add(new DataPoint((float)this.ErrorSeries.Points.Count + 1.0, 1.0))
+            )

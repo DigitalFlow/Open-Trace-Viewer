@@ -13,11 +13,15 @@ module MainWindow =
     type MainWindow() as this = 
         inherit Window("Open Trace Viewer")
 
+        let ds = new DataStore()
+        let plot = new Plotter()
+        let list = new ListView()
+
         do this.Initialize
 
-        member this.DataStore = new DataStore()
-        member this.Plotter = new Plotter()
-        member this.ListView = new ListView()
+        member this.DataStore = ds
+        member this.Plotter = plot
+        member this.ListView = list
        
         member this.Open() =
             let fileDialog = new FileChooserDialog("Choose a log file to open", 
@@ -27,10 +31,13 @@ module MainWindow =
                                                    "Open",ResponseType.Accept)
             
             if fileDialog.Run() = (int)ResponseType.Accept then
-                let file = File.ReadAllLines(fileDialog.Filename)
+                let file = new FileInfo(fileDialog.Filename)
+                this.DataStore.AddFile(file)
 
-                file
-                |> Seq.iter(fun line -> this.DataStore.AddData(line, this.Plotter))
+                let data = this.DataStore.GetData(0, 1, 1)
+
+                this.Plotter.AddDataToPlot(data)
+                this.ListView.AddValues(data)
 
             fileDialog.Destroy()
 
@@ -62,13 +69,10 @@ module MainWindow =
             boxLayout.PackStart(navbar, false, false, (uint32 0))
 
             //Create and attach plot
-            let plot = new Plotter()
-            boxLayout.Add(plot.CreatePlot())
+            boxLayout.Add(this.Plotter.Initialize())
 
             // Create and attach list view
-            let listView = new ListView()
-            let list = listView.CreateList()
-            boxLayout.Add(list)
+            boxLayout.Add(this.ListView.Initialize())
 
             this.Add(boxLayout)              
 

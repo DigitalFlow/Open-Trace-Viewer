@@ -6,3 +6,10 @@ type TraceLevel =
     | Info
     | Warn
     | Error
+
+    override tL.ToString() =
+        match tL with
+        | Trace -> "Trace"
+        | Info -> "Info"
+        | Warn -> "Warn"
+        | Error -> "Error"
