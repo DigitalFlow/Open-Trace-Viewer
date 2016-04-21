@@ -9,10 +9,10 @@ type ListView() as this =
     let view = new TreeView()
     let store = new ListStore(typeof<DateTime>, typeof<string>, typeof<string>)
 
-    member this.View = view
-    member this.Store = store
+    member private this.View = view
+    member private this.Store = store
    
-    member this.Initialize() =
+    member this.GetView() =
             let dateCol = new TreeViewColumn()
             let dateCell = new CellRendererText()
             dateCol.Title <- "Date"

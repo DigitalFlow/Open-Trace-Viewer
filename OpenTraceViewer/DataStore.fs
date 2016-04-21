@@ -15,7 +15,8 @@ type DataStore() =
     member private this.logger = LogManager.GetCurrentClassLogger()
 
     member this.ParseLevel (level:string) =
-        match level.ToLowerInvariant() with
+        let levelLowerCase = level.ToLowerInvariant().Trim()
+        match levelLowerCase with
         | "trace" -> Trace
         | "info" -> Info
         | "warn" -> Warn
@@ -30,12 +31,22 @@ type DataStore() =
         File.ReadAllLines(file.FullName)
         |> Seq.iter (fun item -> this.Store.Add(this.ParseRow(item)))
 
-    member this.GetData(page : int, pageSize : int, count : int) =
+    member this.ReturnFromStore(page, pageSize) =
+        let beginning = page * pageSize
+
+        if beginning > store.Count then
+            new List<DataRow>()
+        else if pageSize < this.Store.Count - beginning then
+            this.Store.GetRange(page * pageSize, pageSize)
+        else
+            this.Store.GetRange(page * pageSize, this.Store.Count - beginning)
+
+    member this.GetData(page : int, pageSize : int) =
         if page * pageSize < this.Store.Count then
-            this.Store.GetRange(page * pageSize, count)
+            this.ReturnFromStore(page, pageSize)
         else
             this.ParseRows(this.Files.[0])
-            this.Store.GetRange(page * pageSize, count)
+            this.ReturnFromStore(page, pageSize)
 
     member this.AddFile (file:FileInfo) =
         this.logger.Trace(sprintf "Adding %s to data store" file.FullName)

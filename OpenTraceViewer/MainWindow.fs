@@ -34,7 +34,7 @@ module MainWindow =
                 let file = new FileInfo(fileDialog.Filename)
                 this.DataStore.AddFile(file)
 
-                let data = this.DataStore.GetData(0, 1, 1)
+                let data = this.DataStore.GetData(0, 50)
 
                 this.Plotter.AddDataToPlot(data)
                 this.ListView.AddValues(data)
@@ -69,10 +69,13 @@ module MainWindow =
             boxLayout.PackStart(navbar, false, false, (uint32 0))
 
             //Create and attach plot
-            boxLayout.Add(this.Plotter.Initialize())
+            boxLayout.Add(this.Plotter.GetView())
 
             // Create and attach list view
-            boxLayout.Add(this.ListView.Initialize())
+            let scrollView = new ScrolledWindow()
+
+            scrollView.Add(this.ListView.GetView())
+            boxLayout.Add(scrollView)
 
             this.Add(boxLayout)              
 
