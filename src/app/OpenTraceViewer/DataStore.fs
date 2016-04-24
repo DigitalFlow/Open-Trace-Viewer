@@ -6,7 +6,7 @@ open OpenTraceViewer
 open System.Collections.Generic
 open NLog
 
-type DataStore() = 
+type public DataStore() = 
     let store = new List<DataRow>()
     let fileList = new List<FileInfo>()
 
@@ -41,14 +41,14 @@ type DataStore() =
         else
             this.Store.GetRange(page * pageSize, this.Store.Count - beginning)
 
-    member this.GetData(page : int, pageSize : int) =
+    member public this.GetData(page : int, pageSize : int) =
         if page * pageSize < this.Store.Count then
             this.ReturnFromStore(page, pageSize)
         else
             this.ParseRows(this.Files.[0])
             this.ReturnFromStore(page, pageSize)
 
-    member this.AddFile (file:FileInfo) =
+    member public this.AddFile (file:FileInfo) =
         this.logger.Trace(sprintf "Adding %s to data store" file.FullName)
         this.Files.Add(file)
         this.logger.Trace(sprintf "Added %s to data store, new file count is %i" file.FullName this.Files.Count)

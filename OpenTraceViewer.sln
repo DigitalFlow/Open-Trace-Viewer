@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "OpenTraceViewer", "OpenTraceViewer\OpenTraceViewer.fsproj", "{80A7C9FC-E7B0-46D3-A339-0054A482D0D6}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "OpenTraceViewer", "src\app\OpenTraceViewer\OpenTraceViewer.fsproj", "{80A7C9FC-E7B0-46D3-A339-0054A482D0D6}"
+EndProject
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "OpenTraceViewer.Tests", "src\test\OpenTraceViewer.Tests\OpenTraceViewer.Tests.fsproj", "{8476BC59-1BE9-45CB-9658-A5E4472D9D40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,5 +15,9 @@ Global
 		{80A7C9FC-E7B0-46D3-A339-0054A482D0D6}.Debug|x86.Build.0 = Debug|x86
 		{80A7C9FC-E7B0-46D3-A339-0054A482D0D6}.Release|x86.ActiveCfg = Release|x86
 		{80A7C9FC-E7B0-46D3-A339-0054A482D0D6}.Release|x86.Build.0 = Release|x86
+		{8476BC59-1BE9-45CB-9658-A5E4472D9D40}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8476BC59-1BE9-45CB-9658-A5E4472D9D40}.Debug|x86.Build.0 = Debug|Any CPU
+		{8476BC59-1BE9-45CB-9658-A5E4472D9D40}.Release|x86.ActiveCfg = Release|Any CPU
+		{8476BC59-1BE9-45CB-9658-A5E4472D9D40}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

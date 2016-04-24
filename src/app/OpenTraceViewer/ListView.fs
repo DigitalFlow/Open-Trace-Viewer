@@ -9,10 +9,15 @@ type ListView() as this =
     let view = new TreeView()
     let store = new ListStore(typeof<DateTime>, typeof<string>, typeof<string>)
 
+    do this.Initialize
+
     member private this.View = view
     member private this.Store = store
    
-    member this.GetView() =
+    member this.GetView =
+        this.View
+
+    member this.Initialize =
             let dateCol = new TreeViewColumn()
             let dateCell = new CellRendererText()
             dateCol.Title <- "Date"
@@ -38,8 +43,6 @@ type ListView() as this =
             this.View.AppendColumn(messageCol) |> ignore
 
             this.View.Model <- this.Store
-
-            this.View
 
     member this.AddValue(row : DataRow) =
         this.Store.AppendValues(row.Date, row.TraceLevel.ToString(), row.Message)

@@ -4,16 +4,18 @@ open System
 open OxyPlot
 open OxyPlot.GtkSharp
 open OxyPlot.Series
+open OxyPlot.Axes
 open NLog
 
-type Plotter() = 
-
+type Plotter() as this = 
     let view = new OxyPlot.GtkSharp.PlotView()
     let model = new PlotModel(Title = "Logs", Subtitle = "Graph view of log entrys - by category")
     let trace = new LineSeries()
     let info = new LineSeries()
     let warn = new LineSeries()
     let error = new LineSeries()
+
+    do this.Initialize
 
     member private this.View = view
     member private this.Model = model
@@ -23,7 +25,10 @@ type Plotter() =
     member private this.ErrorSeries = error
     member private this.Logger = LogManager.GetCurrentClassLogger()
 
-    member this.GetView() =
+    member this.GetView = 
+        this.View
+
+    member private this.Initialize =
             this.TraceSeries.Title <- "Trace"
             this.TraceSeries.CanTrackerInterpolatePoints <- false
             this.TraceSeries.Color <- OxyColors.ForestGreen
@@ -65,8 +70,10 @@ type Plotter() =
             this.Model.Series.Add(this.WarnSeries)
             this.Model.Series.Add(this.ErrorSeries)
 
+            this.Model.Axes.Add(new DateTimeAxis(Position = AxisPosition.Bottom, Title = "Log Date", Minimum = 0.0, Maximum = 100.0))
+            this.Model.Axes.Add(new LinearAxis(Position = AxisPosition.Left, Title = "Log Level Entry Count", Minimum = 0.0, Maximum = 100.0))
+
             this.View.Model <- model
-            this.View
 
         member public this.AddDataToPlot(rows:seq<DataRow>) =
             rows
@@ -74,14 +81,14 @@ type Plotter() =
                             match row.TraceLevel with
                             | Trace -> 
                                 this.Logger.Trace(sprintf "Adding row with tracelevel Trace to plot")
-                                this.TraceSeries.Points.Add(new DataPoint((float)this.TraceSeries.Points.Count + 1.0, (float)this.TraceSeries.Points.Count + 1.0))
+                                this.TraceSeries.Points.Add(DateTimeAxis.CreateDataPoint(row.Date, (float)this.TraceSeries.Points.Count + 1.0))
                             | Info -> 
                                 this.Logger.Trace(sprintf "Adding row with tracelevel Info to plot")
-                                this.InfoSeries.Points.Add(new DataPoint((float)this.InfoSeries.Points.Count + 1.0, (float)this.InfoSeries.Points.Count + 1.0))
+                                this.InfoSeries.Points.Add(DateTimeAxis.CreateDataPoint(row.Date, (float)this.InfoSeries.Points.Count + 1.0))
                             | Warn -> 
                                 this.Logger.Trace(sprintf "Adding row with tracelevel Warn to plot")
-                                this.WarnSeries.Points.Add(new DataPoint((float)this.WarnSeries.Points.Count + 1.0, (float)this.WarnSeries.Points.Count + 1.0))
+                                this.WarnSeries.Points.Add(DateTimeAxis.CreateDataPoint(row.Date, (float)this.WarnSeries.Points.Count + 1.0))
                             | Error -> 
                                 this.Logger.Trace(sprintf "Adding row with tracelevel Error to plot")
-                                this.ErrorSeries.Points.Add(new DataPoint((float)this.ErrorSeries.Points.Count + 1.0, (float)this.ErrorSeries.Points.Count + 1.0))
+                                this.ErrorSeries.Points.Add(DateTimeAxis.CreateDataPoint(row.Date, (float)this.ErrorSeries.Points.Count + 1.0))
             )
