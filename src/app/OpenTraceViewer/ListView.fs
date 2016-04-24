@@ -17,14 +17,15 @@ type ListView() as this =
     member this.GetView =
         this.View
 
-    member this.Initialize =
+    member private this.Initialize =
             let dateCol = new TreeViewColumn()
             let dateCell = new CellRendererText()
             dateCol.Title <- "Date"
             dateCol.PackStart(dateCell, true)
             dateCol.AddAttribute(dateCell, "text", 0)
             dateCol.SetCellDataFunc(dateCell, 
-                (fun (coll:TreeViewColumn)(cell:CellRenderer)(model:TreeModel)(iter:TreeIter) -> (cell:?>CellRendererText).Text <- (model.GetValue(iter, 0).ToString())))
+                (fun (col:TreeViewColumn)(cell:CellRenderer)(model:ITreeModel)(iter:TreeIter) -> 
+                    (cell:?>CellRendererText).Text <- (model.GetValue(iter, 0).ToString())))
 
             let levelCol = new TreeViewColumn()
             let levelCell = new CellRendererText()

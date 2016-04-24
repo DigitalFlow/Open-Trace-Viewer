@@ -1,6 +1,7 @@
 ﻿namespace OpenTraceViewer
 
 open System
+open System.Collections
 open OxyPlot
 open OxyPlot.GtkSharp
 open OxyPlot.Series

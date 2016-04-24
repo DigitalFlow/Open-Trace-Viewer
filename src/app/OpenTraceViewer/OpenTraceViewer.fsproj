@@ -7,7 +7,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>OpenTraceViewer</RootNamespace>
     <AssemblyName>OpenTraceViewer</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,34 +24,36 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="gtk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="glade-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="pango-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="atk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="FSharp.Core" />
-    <Reference Include="OxyPlot">
-      <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable1983\lib\net40\OxyPlot.dll</HintPath>
+    <Reference Include="atk-sharp">
+      <HintPath>..\..\..\packages\GtkSharp.3.1.3\lib\net45\atk-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="OxyPlot.GtkSharp">
-      <HintPath>..\packages\OxyPlot.GtkSharp.1.0.0-unstable1983\lib\net40\OxyPlot.GtkSharp.dll</HintPath>
+    <Reference Include="cairo-sharp">
+      <HintPath>..\..\..\packages\GtkSharp.3.1.3\lib\net45\cairo-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cairo" />
+    <Reference Include="gdk-sharp">
+      <HintPath>..\..\..\packages\GtkSharp.3.1.3\lib\net45\gdk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gio-sharp">
+      <HintPath>..\..\..\packages\GtkSharp.3.1.3\lib\net45\gio-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glib-sharp">
+      <HintPath>..\..\..\packages\GtkSharp.3.1.3\lib\net45\glib-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp">
+      <HintPath>..\..\..\packages\GtkSharp.3.1.3\lib\net45\gtk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="pango-sharp">
+      <HintPath>..\..\..\packages\GtkSharp.3.1.3\lib\net45\pango-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="NLog">
-      <HintPath>..\packages\NLog.4.3.1\lib\net40\NLog.dll</HintPath>
+      <HintPath>..\..\..\packages\NLog.4.3.1\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.GtkSharp3">
+      <HintPath>..\..\..\packages\OxyPlot.GtkSharp3.2015.1.1046-alpha\lib\net45\OxyPlot.GtkSharp3.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot">
+      <HintPath>..\..\..\packages\OxyPlot.Core.2015.1.1046-alpha\lib\net45\OxyPlot.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -67,10 +69,11 @@
     <Compile Include="Main.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
+  <Import Project="..\..\..\packages\GtkSharp.3.1.3\build\net45\GtkSharp.targets" Condition="Exists('..\..\..\packages\GtkSharp.3.1.3\build\net45\GtkSharp.targets')" />
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
