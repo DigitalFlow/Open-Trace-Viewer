@@ -6,6 +6,8 @@
 [Bb]in/
 packages/
 TestResults/
+.fake/
+tools/
 
 # globs
 Makefile.in
