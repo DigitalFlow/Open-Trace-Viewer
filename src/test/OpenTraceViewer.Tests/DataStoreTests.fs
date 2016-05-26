@@ -1,4 +1,6 @@
-﻿module DataStoreTests =
+﻿namespace OpenTraceViewer.Tests
+    
+module DataStoreTests =
     open Xunit
     open NLog
     open System.IO

@@ -9,8 +9,8 @@ open OxyPlot.Axes
 open NLog
 
 type Plotter() as this = 
-    let view = new OxyPlot.GtkSharp.PlotView()
-    let model = new PlotModel(Title = "Logs", Subtitle = "Graph view of log entrys - by category")
+    let view = new PlotView()
+    let model = new OxyPlot.PlotModel(Title = "Logs", Subtitle = "Graph view of log entrys - by category")
     let trace = new LineSeries()
     let info = new LineSeries()
     let warn = new LineSeries()
@@ -77,6 +77,8 @@ type Plotter() as this =
             this.View.Model <- model
 
         member public this.AddDataToPlot(rows:seq<DataRow>) =
+            let firstRow = rows |> Seq.head
+
             rows
             |> Seq.iter (fun row ->
                             match row.TraceLevel with
